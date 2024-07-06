@@ -170,7 +170,29 @@
     </div>
     
     <div class="content" v-pre>
-        <h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import torch     <span class="comment">#引入torch库</span></span><br><span class="line">x = torch.arange(12)  <span class="comment">#令x 为矩阵 </span></span><br></pre></td></tr></table></figure>
+        <h3 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h3><h2 id="张量的创建和引入第三方库"><a href="#张量的创建和引入第三方库" class="headerlink" title="张量的创建和引入第三方库"></a>张量的创建和引入第三方库</h2><pre><code class="bash">import torch     
+x = torch.arange(12)  
+</code></pre>
+<h2 id="基本函数使用"><a href="#基本函数使用" class="headerlink" title="基本函数使用"></a>基本函数使用</h2><pre><code class="bash">x = torch.arange(12)  #创建行张量
+print(x)
+print(x.shape)  #张量每个轴的长度
+print(x.numel())    #计算张量内所有元素的总和
+
+X = x.reshape(3, 4)     #改变形状不改变大小
+print(X)
+print(X.shape)
+print(X.numel())
+print(X.size())
+</code></pre>
+<h1 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h1><p><img src="E:\tool\github\blog\picture\1.png" alt="第一个的运行结果" title="First"><br><strong>size()<strong>和</strong>shape</strong>的运行结果是一致的<br>接下来是其他的创建张量的形式</p>
+<pre><code class="bash">x = torch.zeros((2, 3, 4))
+print(x)
+x = torch.ones((2, 3, 4))
+print(x)
+x = torch.rand((2, 3, 4))
+print(x)
+</code></pre>
+<h1 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h1><p><img src="E:\tool\github\blog\picture\2.png" alt="其他张量创建" title="Second"></p>
 
     </div>
     
