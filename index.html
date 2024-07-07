@@ -232,6 +232,18 @@ print(x // y)   #整除
 print(x % y)    #取余||模运算
 </code></pre>
 <h3 id="运行结果-2"><a href="#运行结果-2" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="/images/3.png"></p>
+<pre><code class="bash">x = torch.tensor([1.0, 2, 4, 8])
+print(torch.exp(x))  #e的几次方
+x = torch.arange(12, dtype=torch.float32).reshape(3, 4)
+y = torch.tensor([[2.0, 1, 4, 3], [1, 2, 3, 4], [4, 3, 2, 1]])
+print(torch.cat((x, y), dim=0))  #cat会把张量链接起来 || dim=0为形状的第一个元素即为行
+print(torch.cat((x, y), dim=1))  #                 || dim=1为形状的第二个元素即为列
+</code></pre>
+<p><img src="/images/4.png"></p>
+<pre><code class="bash">print(x == y)       #判断对应的元素是否相等
+print(x.sum())      #求所有元素的和
+</code></pre>
+<p><img src="/images/5.png"></p>
 
             
         </div>
