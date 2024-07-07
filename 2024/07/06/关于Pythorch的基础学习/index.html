@@ -216,7 +216,12 @@ print(torch.cat((x, y), dim=1))  #                 || dim=1为形状的第二个
 print(x.sum())      #求所有元素的和
 </code></pre>
 <p><img src="/images/5.png"></p>
-<h2 id="广播机制"><a href="#广播机制" class="headerlink" title="广播机制"></a>广播机制</h2>
+<h2 id="广播机制"><a href="#广播机制" class="headerlink" title="广播机制"></a>广播机制</h2><pre><code class="bash">x = torch.arange(3).reshape(3, 1)
+y = torch.arange(2).reshape(1, 2)
+print(x + y) 
+</code></pre>
+<p>由于<strong>形状</strong>本来是不匹配的所以无法进行相加的操作，但是由于广播机制<br>所以对其进行行复制和列复制使其成为一样的形状<br>对于本例子而言即为<br><img src="/images/6.png"></p>
+
     </div>
     
     
