@@ -185,7 +185,7 @@ print(X.numel())
 print(X.size())
 </code></pre>
 <h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="/images/1.png" alt="第一个的运行结果"><br><strong>size()<strong>和</strong>shape</strong>的运行结果是一致的<br>接下来是其他的创建张量的形式</p>
-<pre><code class="bash">x = torch.zeros((2, 3, 4))
+<pre><code class="bash">x = torch.zeros((2, 3, 4))      #这是三维张量有两个3x4的矩阵
 print(x)
 x = torch.ones((2, 3, 4))
 print(x)
@@ -193,6 +193,17 @@ x = torch.rand((2, 3, 4))
 print(x)
 </code></pre>
 <h3 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="/images/2.png" alt="其他张量创建"></p>
+<h2 id="运算符的使用"><a href="#运算符的使用" class="headerlink" title="运算符的使用"></a>运算符的使用</h2><pre><code class="bash">x = torch.tensor([1.0, 2, 4, 8])
+y = torch.tensor([2, 2, 2, 2])
+print(x + y)    #加法
+print(x - y)    #减法
+print(x * y)    #乘法
+print(x / y)    #除法
+print(x ** y)   #幂运算
+print(x // y)   #整除
+print(x % y)    #取余||模运算
+</code></pre>
+<h3 id="运行结果-2"><a href="#运行结果-2" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="/images/3.png"></p>
 
     </div>
     
