@@ -170,7 +170,7 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h1><h2 id="张量的创建和引入第三方库"><a href="#张量的创建和引入第三方库" class="headerlink" title="张量的创建和引入第三方库"></a>张量的创建和引入第三方库</h2><pre><code class="bash">import torch     
+        <h1 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h1><h2 id="张量的创建和引入第三方库"><a href="#张量的创建和引入第三方库" class="headerlink" title="张量的创建和引入第三方库"></a>张量的创建和引入第三方库</h2><pre><code class="bash">import torch     
 x = torch.arange(12)  
 </code></pre>
 <h2 id="基本函数使用"><a href="#基本函数使用" class="headerlink" title="基本函数使用"></a>基本函数使用</h2><pre><code class="bash">x = torch.arange(12)  #创建行张量
@@ -257,7 +257,19 @@ x += y
 print(id(x) == before)
 </code></pre>
 <p>上述方法为<strong>切片表示法</strong>(结果略)<br>切片表示法在Python中是一种高效处理数组和序列的方法。它通过创建原始数据的视图（view）而不是复制来节省内存。这意味着当你使用切片表示法操作数组或序列时，不会创建新的对象，而是创建一个指向相同内存区域的新视图。这种方式在处理大型数据集时尤其有用，因为它可以显著减少内存的使用。<br>第二个表示的方法前提是你的x不会再被使用</p>
-<h2 id="转换为其他Python对象"><a href="#转换为其他Python对象" class="headerlink" title="转换为其他Python对象"></a>转换为其他Python对象</h2>
+<h2 id="转换为其他Python对象"><a href="#转换为其他Python对象" class="headerlink" title="转换为其他Python对象"></a>转换为其他Python对象</h2><pre><code class="bash">y = torch.rand(5)
+x = torch.rand(5)
+
+a = x.numpy()
+b = torch.tensor(a)
+print(type(a), type(b))
+
+a = torch.tensor([3.5])
+print(a.item(), float(a), int(a))       #将张量转化为python标量的方法
+</code></pre>
+<p>上文中的numpy张量和torch张量的区别：<br>numpt不支持GPU加速、自动微分，但numpy主要面向科学计算，提供了丰富的数学和数组操作函数等，只做了解即可。他们两者共享底层内存，就地操作更改一个张量也会更改另一个张量。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>深度学习储存和操作数据的主要接口是张量(n维数组)。它提供了各种功能，包括基本数学运算、广播、索引】切片、内存节省和转换为其他Python对象。</p>
+<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1>
     </div>
     
     
