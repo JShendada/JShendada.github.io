@@ -184,7 +184,7 @@ print(X.shape)
 print(X.numel())
 print(X.size())
 </code></pre>
-<p><img src="/images/1.png" alt="第一个的运行结果"><br><strong>size()<strong>和</strong>shape</strong>的运行结果是一致的<br>接下来是其他的创建张量的形式</p>
+<p><img src="/images/1.png" alt="第一个的运行结果"><br>**torch.arange(start,end,step)**是生成一个从start开始到end但不包括end结束，<br>步长为step的一个张量。如果step的值使得从start到end无法取到第二个值，结果仅有<br>起始值。<br><strong>size()<strong>和</strong>shape</strong>的运行结果是一致的<br>接下来是其他的创建张量的形式</p>
 <pre><code class="bash">x = torch.zeros((2, 3, 4))      #这是三维张量有两个3x4的矩阵
 print(x)
 x = torch.ones((2, 3, 4))
@@ -221,6 +221,19 @@ y = torch.arange(2).reshape(1, 2)
 print(x + y) 
 </code></pre>
 <p>由于<strong>形状</strong>本来是不匹配的所以无法进行相加的操作，但是由于广播机制<br>所以对其进行行复制和列复制使其成为一样的形状<br>对于本例子而言即为<br><img src="/images/6.png"></p>
+<h2 id="索引和切片"><a href="#索引和切片" class="headerlink" title="索引和切片"></a>索引和切片</h2><pre><code class="bash">import torch
+
+x = torch.arange(12).reshape(3, 4)
+print(x[1:3])       #访问2，3行的所有元素
+print(x[-1])        #访问最后一行的元素
+x[1, 2] = 9         #索引到矩阵的第二行的第三个元素进行改写
+print(x)
+x[0:2, :] = 12      #将从第一行到第二行的所有元素进行改写
+print(x)
+x[1, 1:3] = 1       #由上一次类推可得到
+print(x)
+</code></pre>
+<p><img src="/images/7.png"></p>
 
     </div>
     
