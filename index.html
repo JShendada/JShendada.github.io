@@ -328,8 +328,11 @@ inputs = inputs.fillna(inputs.mean(numeric_only=True))
 print(inputs)
 </code></pre>
 <p><img src="/images/10.png"><br>这样对Alley值的类别自动分为Pave和NaN，缺失的pave &#x3D; 0， nan &#x3D; 1.</p>
-<h2 id="转换为张量格式"><a href="#转换为张量格式" class="headerlink" title="转换为张量格式"></a>转换为张量格式</h2><pre><code class="bash">
+<h2 id="转换为张量格式"><a href="#转换为张量格式" class="headerlink" title="转换为张量格式"></a>转换为张量格式</h2><pre><code class="bash">outputs = outputs.astype(&#39;float32&#39;)
+x, y = torch.tensor(inputs.values), torch.tensor(outputs.values)
+print(x, y)
 </code></pre>
+<p>这段代码目前一直报错：TypeError: can’t convert np.ndarray of type numpy.object_. The only supported types are: float64, float32, float16, complex64, complex128, int64, int32, int16, int8, uint64, uint32, uint16, uint8, and bool.所以暂时存疑日后解决。</p>
 
             
         </div>
