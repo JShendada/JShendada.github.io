@@ -296,6 +296,12 @@ print(inputs)
 inputs = inputs.fillna(inputs.mean(numeric_only=True))
 </code></pre>
 <p>第一种方法只针对单一类别，第二种方法针对全部数值类型的列<br><img src="/images/9.png"></p>
+<pre><code class="bash">inputs = pd.get_dummies(inputs, dummy_na=True)
+print(inputs)
+</code></pre>
+<p><img src="/images/10.png"><br>这样对Alley值的类别自动分为Pave和NaN，缺失的pave &#x3D; 0， nan &#x3D; 1.</p>
+<h2 id="转换为张量格式"><a href="#转换为张量格式" class="headerlink" title="转换为张量格式"></a>转换为张量格式</h2><pre><code class="bash">
+</code></pre>
 
     </div>
     
