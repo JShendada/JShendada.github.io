@@ -373,6 +373,17 @@ print(A.sum(dim=[0, 1]))   # 结果等于A.sum()
 print(A.mean(dim=0))    # 沿轴求平均值
 </code></pre>
 <p>对于文章中指定轴列使用axis但本文的数据并不符合，所以使用dim更好<br><img src="/images/12.png"></p>
+<h3 id="非降维求和"><a href="#非降维求和" class="headerlink" title="非降维求和"></a>非降维求和</h3><pre><code class="bash">A = torch.arange(20, dtype=torch.float32).reshape(5, 4)
+sum_A = A.sum(dim=1, keepdim=True)
+print(A / sum_A)    # 通过广播机制，对每行求和后仍保持一个轴
+print(A.cumsum(dim=0))  # 不会沿任何轴降低降低输入张量的维度
+</code></pre>
+<p><img src="/images/13.png"><br>竖着观察,0,0 + 4, 0 + 4 + 8以此类推</p>
+<h2 id="点积"><a href="#点积" class="headerlink" title="点积"></a>点积</h2><pre><code class="bash">y = torch.ones(4, dtype=torch.float32)
+x = torch.arange(4, dtype=torch.float32)
+print(torch.dot(x, y))
+</code></pre>
+<p>结果是: tensor(6.)<br>点积在很多场景都有用。例如，给定一组由向量$$x \in R^d$$</p>
 
             
         </div>
