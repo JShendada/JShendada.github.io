@@ -383,7 +383,7 @@ print(A.cumsum(dim=0))  # 不会沿任何轴降低降低输入张量的维度
 x = torch.arange(4, dtype=torch.float32)
 print(torch.dot(x, y))
 </code></pre>
-<p>结果是: tensor(6.)<br>点积在很多场景都有用。例如，给定一组由向量$$x \in R^d$$</p>
+<p>结果是: tensor(6.)<br>点积在很多场景都有用。例如，给定一组由向量$x \in R^d$表示的值，和一组由向量$w \in R^d$表示的权重。x中的值根据权重w的加权和可以表示为点积$x^Tw$。当权重为非负且和为1，即</p>
 
             
         </div>
