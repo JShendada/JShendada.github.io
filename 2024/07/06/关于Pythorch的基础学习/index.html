@@ -364,7 +364,46 @@ torch.mm(A, B)
 print(torch.norm(u))    # 计算L2范数 同时也是 佛罗贝尼乌斯范数(每个元素的平方和相加开根号)
 print(torch.abs(u).sum())   #计算L1范数
 </code></pre>
-<h1 id="微积分"><a href="#微积分" class="headerlink" title="微积分"></a>微积分</h1>
+<h1 id="微积分"><a href="#微积分" class="headerlink" title="微积分"></a>微积分</h1><p>在深度学习中，我们训练模型。不断更新它，是它在见到越来越多的数据时变得越来越好。通常情况下，变得更好意味着最小化一个损失函数，即一个衡量“模型有多糟糕”这个问题的分数。最终，我们关心的是生成一个模型，它能在从未见过的数据上表现良好。但训练模型只能将模型与我们实际见到的数据相拟合。因此，我们可以将拟合模型任务分解为两个问题—–优化和拟合<br>优化指的是用拟合模型观察数据的过程<br>泛化指的是用数学原理和实践者的智慧，能够知道我们生成有效性超出用于训练的数据集本身的模型。</p>
+<pre><code class="bash">import numpy as np
+from matplotlib import pyplot as plt
+from d2l import torch as d2l
+
+
+def f(x):
+    return 3 * x ** 2 - 4 * x
+
+
+def numerical_lim(f, x, h):
+    return (f(x + h) - f(x)) / h
+
+
+h = 0.1
+for i in range(5):
+    print(f&#39;h=&#123;h:.5f&#125;, numerical limit=&#123;numerical_lim(f, 1, h):.5f&#125;&#39;)
+    h *= 0.1
+</code></pre>
+<p>这段代码有所了解以及如何使用即可，现由于种种BUG，无法在pycharm中运行。<br><em>注意</em>接下来的内容均属于数学知识如果遗忘请自己回顾。<em>偏导数,梯度,链式法则</em></p>
+<h1 id="自动微分"><a href="#自动微分" class="headerlink" title="自动微分"></a>自动微分</h1><pre><code class="bash">import torch
+
+x = torch.arange(4.0, requires_grad=True)
+y = 2 * torch.dot(x, x)
+y.backward()    # 通过反向传播函数来自动计算y关于x的每个分量的梯度
+print(x.grad)
+y = x.sum()
+y.backward()
+print(x.grad)
+</code></pre>
+<p><img src="/images/14.png"><br>我们可以看到第二次的计算的时候结果并不是1.1.1.1.而是和上一次的结果相加所以我们需要在进行反向传播的时候对x进行清除操作</p>
+<pre><code class="bash">x.gard.zero_()
+</code></pre>
+<p>这样结果就符合本意了</p>
+<h2 id="非标量变量的反向传播"><a href="#非标量变量的反向传播" class="headerlink" title="非标量变量的反向传播"></a>非标量变量的反向传播</h2><pre><code class="bash">x = torch.arange(4.0,requires_grad=True)
+y = x * x
+y.sum().backward()
+print(x.grad)
+</code></pre>
+
     </div>
     
     
