@@ -181,6 +181,36 @@
         
 
 <div class="post">
+    <a href="/2024/07/24/%E7%BA%BF%E6%80%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+        <h2 class="post-title">线性神经网络</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/7/24
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h1 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h1>
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        
+        
+    </div>
+    <a href="/2024/07/24/%E7%BA%BF%E6%80%A7%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
     <a href="/2024/07/06/%E5%85%B3%E4%BA%8EPythorch%E7%9A%84%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
         <h2 class="post-title">关于Pythorch的基础学习</h2>
     </a>
@@ -431,6 +461,45 @@ y = x * x
 y.sum().backward()
 print(x.grad)
 </code></pre>
+<h2 id="分离计算"><a href="#分离计算" class="headerlink" title="分离计算"></a>分离计算</h2><pre><code class="bash">x = torch.arange(4.0,requires_grad=True)
+y = x * x
+u = y.detach()  # 进行这个操作后u会被当常数看待
+z = u * x
+z.sum().backward()
+print(x.grad)
+</code></pre>
+<p><em>输出结果</em>:tensor([0., 1., 4., 9.]) 可以知道这个结果为z对x的倒数为u。<br>同时由于记录了y的计算结果，所以可以在y上调用反向传播函数，结果为2x。</p>
+<h2 id="Python控制流的梯度计算"><a href="#Python控制流的梯度计算" class="headerlink" title="Python控制流的梯度计算"></a>Python控制流的梯度计算</h2><p>Python控制流(例如，条件，循环或任意函数调用)</p>
+<pre><code class="bash">def f(a):
+    b = a * 2
+    while b.norm() &lt; 1000:  # 求L2范数&lt;1000
+        b = b * 2
+    if b.sum() &gt; 0:
+        c = b
+    else:
+        c = 100 * b
+    return c
+
+
+a = torch.randn(size=(), requires_grad=True)
+d = f(a)
+d.backward()
+print(a.grad == d / a)
+</code></pre>
+<p>输出:True 因为f(a)为分段线性的，随意对于任意a都有f(a) &#x3D; k * a。所以grad等于d &#x2F; a。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>深度学习框架可以自动计算导数：我们先将梯度附加到想要对其计算偏导数的变量上，然后记录目标值的计算，执行它的反向传播函数，并访问得到梯度。</p>
+<h1 id="概率"><a href="#概率" class="headerlink" title="概率"></a>概率</h1><p>本文的概率论知识是基础，需要自行了解。这里仅告知如何代码实现概率。</p>
+<pre><code class="bash">import torch
+from torch.distributions import multinomial
+
+fair_probs = torch.ones([6]) / 6
+print(multinomial.Multinomial(1, fair_probs).sample())  # 这里的1是仅模拟一次可以多此模拟再除以模拟次数来求每个点数的概率
+</code></pre>
+<p>本文后续的概率论知识自行掌握</p>
+<h1 id="文档查询"><a href="#文档查询" class="headerlink" title="文档查询"></a>文档查询</h1><pre><code class="bash">print(dir(torch.distributions)) # 查询随机数生成模块的所有属性__是特殊对象_是内部函数
+help(torch.ones)    # 可以查询torch.ones的用法
+</code></pre>
+<p>基础知识完结，接下来是线性神经网络。</p>
 
             
         </div>
