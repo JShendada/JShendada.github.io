@@ -290,7 +290,46 @@ for epoch in range(num_epochs):
 </code></pre>
 <p>上述函数中的轮数和学习率都是超参数，我们需要根据所得的数据去更改这两个超参数来获得接近的值。<br>同时我们也不必担心得不到完美的值，因为即使在复杂的情况下，也存在许多种参数的组合能够实现较高的预测。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>在这一章我们简单的学习了神经网络是如何实现和优化的，只运用了张量和自动微分，并没有使用定义层和复杂的优化器，这些日后会学到。</p>
+<h1 id="线性回归的简洁实现"><a href="#线性回归的简洁实现" class="headerlink" title="线性回归的简洁实现"></a>线性回归的简洁实现</h1><p>本节将利用现代的深度学习库来实现诸如数据迭代器、损失函数、优化器和神经网络层(简单易操作)</p>
+<pre><code class="bash">import numpy as np
+import torch
+from torch.utils import data
+from d2l import torch as d2l
+from torch import nn
 
+true_w = torch.tensor([2, -3.4])
+true_b = 4.2
+features, labels = d2l.synthetic_data(true_w, true_b, 1000)
+
+
+def load_array(data_arrays, batch_size, is_train=True):
+    dataset = data.TensorDataset(*data_arrays)
+    return data.DataLoader(dataset, batch_size, shuffle=is_train)
+
+
+batch_size = 10
+data_iter = load_array((features, labels), batch_size)
+
+net = nn.Sequential(nn.Linear(2, 1))
+
+net[0].weight.data.normal_(0, 0.01)
+net[0].bias.data.fill_(0)
+
+loss = nn.MSELoss()
+trainer = torch.optim.SGD(net.parameters(), lr=0.03)
+
+num_epochs = 3
+for epoch in range(num_epochs):
+    for X, y in data_iter:
+        l = loss(net(X), y)
+        trainer.zero_grad()
+        l.backward()    #不需要求和因为pytorch已经帮你求完了
+        trainer.step()
+    l = loss(net(features), labels)
+    print(f&#39;epoch &#123;epoch + 1&#125;, loss &#123;l:f&#125;&#39;)
+</code></pre>
+<p>使用 data.TensorDataset 创建一个数据集对象 dataset。data_arrays 是一个包含特征和标签的元组，*data_arrays 将元组解包为位置参数传递给 TensorDataset。<br>使用 data.DataLoader 创建一个数据加载器对象 DataLoader，并返回它。<br>dataset：要加载的数据集。<br>batch_size：每个批次的大小。<br>shuffle：是否在每个 epoch 开始时打乱数据。如果 is_train 为 True，则打乱数据<br>清零优化器的梯度 trainer.zero_grad()。<br>反向传播计算梯度 l.backward()。<br>更新模型参数 trainer.step()<br>上述代码可以和上一张进行对比即可了解这段代码运用的第三方库的作用。</p>
+<h1 id="softmax回归"><a href="#softmax回归" class="headerlink" title="softmax回归"></a>softmax回归</h1>
     </div>
     
     
