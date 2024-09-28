@@ -209,8 +209,87 @@ print(dot_product)
 <h3 id="生物学"><a href="#生物学" class="headerlink" title="生物学"></a>生物学</h3><p>略</p>
 <h1 id="线性回归的从零开始实现"><a href="#线性回归的从零开始实现" class="headerlink" title="线性回归的从零开始实现"></a>线性回归的从零开始实现</h1><p>代码实现!!</p>
 <h2 id="生成数据集"><a href="#生成数据集" class="headerlink" title="生成数据集"></a>生成数据集</h2><p>简单起见，我们将根据带有噪声的线性模型构造一个数据集。我们的任务是根据这个有限样本的数据集来恢复这个模型的参数。我们将使用低维数据，这样可以很容易地将其可视化，并且每个样本包含从标准正态分布中抽样的两个特征。我们的合成数据集是一个矩阵$X \in R^{1000×2}$<br>我们使用线性模型参数 $\omega &#x3D; [2,-3.4]^T、b &#x3D; 4.2 和噪声项\epsilon$来生成数据集及其标签<br>$y &#x3D; X\omega + b + \epsilon$<br>$\epsilon$ 我们可以视为模型预测和标签的潜在观测误差。这里我们认为标准假设成立，即$\epsilon$ 服从标准正态分布。为了简化问题我们将标准差设为0.01。</p>
-<pre><code class="bash">
+<pre><code class="bash">import random
+import torch
+from d2l import torch as d2l
+
+
+def synthetic_data(w, b, num_examples):
+    &quot;&quot;&quot; 生成y = wx + b + 噪声&quot;&quot;&quot;
+    x = torch.normal(0, 1, (num_examples, len(w)))  # normal 为高斯分布
+    y = torch.matmul(x, w) + b
+    y += torch.normal(0, 0.01, y.shape)
+    return x, y.reshape((-1, 1))  # 返回列向量
+
+
+true_w = torch.tensor([2, -3.4])
+true_b = 4.2
+features, labels = synthetic_data(true_w, true_b, 1000)
+d2l.set_figsize()
+d2l.plt.scatter(features[:, (1)].detach().numpy(), labels.detach().numpy(), 1)
+d2l.plt.show()
 </code></pre>
+<p><img src="/images/15.png"><br>通过观察上图,我们可以发现二者的线性关系。</p>
+<h2 id="读取数据集"><a href="#读取数据集" class="headerlink" title="读取数据集"></a>读取数据集</h2><p>由于在训练过程中，我们需要对整个数据集遍历并且分批次抽少量样来更新模型，所以必不可少的是定义一个函数来打乱数据集并以小批量获取数据。</p>
+<pre><code class="bash">def data_iter(batch_size, features, labels):
+    # 获取特征数据的样本数量
+    num_examples = len(features)
+    
+    # 创建一个包含从 0 到 num_examples-1 的索引列表
+    indices = list(range(num_examples))
+    
+    # 随机打乱索引列表
+    random.shuffle(indices)
+    
+    # 使用 for 循环遍历索引列表，每次步长为 batch_size
+    for i in range(0, num_examples, batch_size):
+        # 计算当前批次的索引范围，并将这些索引转换为 PyTorch 张量
+        batch_indices = torch.tensor(indices[i:min(i+batch_size, num_examples)])
+        
+        # 返回当前批次的索引、特征数据和标签数据
+        yield batch_indices, features[batch_indices], labels[batch_indices]
+
+
+batch_size = 10
+for x, y in data_iter(batch_size, features, labels):
+    print(x, &#39;\n&#39;, y)
+    break
+</code></pre>
+<p><img src="/images/16.png"><br>上述代码中，通过接收批量大小，特征矩阵和标签向量作为输入，生成大小为batch_size的小批量。并且RT，特征v矩阵为二维，标签向量为一维。<br>上述代码的实际效率很低，并且面对庞大的数据集时，我们需要意味着需要大量的内存访问，所以这个方法其实很低效。深度学习框架中实现的内置迭代器效率要高得多,它何以处理存储在文件中的数据和数据流提供的数据。</p>
+<h2 id="初始化参数模型"><a href="#初始化参数模型" class="headerlink" title="初始化参数模型"></a>初始化参数模型</h2><pre><code class="bash">w = torch.normal(0, 0.01, size=(2, 1), requires_grad=True)
+b = torch.zeros(1, requires_grad=True)
+</code></pre>
+<p>先通过从均值为0,标准差为0.01的正态分布中抽样随机数来初始化权重.并将偏置初始化为0<br>初始化之后我们的目的是更新参数直到能够拟合我们的数据。所以每次更新都要计算损失函数关于我们参数的梯度。</p>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><pre><code class="bash">def linreg(x, w, b):
+    return torch.matmul(x, w) + b
+</code></pre>
+<p>上述为线性回归模型</p>
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><pre><code class="bash">def squared_loss(y_hat, y):
+    return (y_hat - y.reshape(y_hat.shape))**2 / 2
+</code></pre>
+<p>上述为均方损失，并且对真实值y可能是行向量和列向量，所以为了统一起见我们把它reshape成和预测值$y_hat$一样。</p>
+<h2 id="定义优化算法"><a href="#定义优化算法" class="headerlink" title="定义优化算法"></a>定义优化算法</h2><pre><code class="bash">def sgd(params, lr, batch_size):
+    with torch.no_grad():
+        for param in params:
+            param -= lr * param.grad / batch_size
+            param.grad.zero_()
+</code></pre>
+<p>上述代码实现了对小批量随机梯度下降的更新。<br>使用 torch.no_grad() 上下文管理器，表示在这个上下文中进行的操作不会被记录到计算图中。这是为了避免在更新参数时计算梯度，从而节省内存和计算资源。</p>
+<h2 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h2><pre><code class="bash">lr = 0.03
+num_epochs = 3
+net = linreg
+loss = squared_loss
+for epoch in range(num_epochs):
+    for X, y in data_iter(batch_size, features, labels):
+        l = loss(net(X, w, b), y)
+        l.sum().backward()
+        sgd([w, b], lr, batch_size)
+    with torch.no_grad():
+        train_l = loss(net(features, w, b), labels)
+        print(f&#39;epoch &#123;epoch + 1&#125;, loss &#123;float(train_l.mean()):f&#125;&#39;)
+</code></pre>
+<p>上述函数中的轮数和学习率都是超参数，我们需要根据所得的数据去更改这两个超参数来获得接近的值。<br>同时我们也不必担心得不到完美的值，因为即使在复杂的情况下，也存在许多种参数的组合能够实现较高的预测。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>在这一章我们简单的学习了神经网络是如何实现和优化的，只运用了张量和自动微分，并没有使用定义层和复杂的优化器，这些日后会学到。</p>
 
     </div>
     
