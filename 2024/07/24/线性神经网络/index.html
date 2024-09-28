@@ -329,7 +329,8 @@ for epoch in range(num_epochs):
     print(f&#39;epoch &#123;epoch + 1&#125;, loss &#123;l:f&#125;&#39;)
 </code></pre>
 <p>使用 data.TensorDataset 创建一个数据集对象 dataset。data_arrays 是一个包含特征和标签的元组，*data_arrays 将元组解包为位置参数传递给 TensorDataset。<br>使用 data.DataLoader 创建一个数据加载器对象 DataLoader，并返回它。<br>dataset：要加载的数据集。<br>batch_size：每个批次的大小。<br>shuffle：是否在每个 epoch 开始时打乱数据。如果 is_train 为 True，则打乱数据<br>清零优化器的梯度 trainer.zero_grad()。<br>反向传播计算梯度 l.backward()。<br>更新模型参数 trainer.step()<br>上述代码可以和上一张进行对比即可了解这段代码运用的第三方库的作用。</p>
-<h1 id="softmax回归"><a href="#softmax回归" class="headerlink" title="softmax回归"></a>softmax回归</h1>
+<h1 id="softmax回归"><a href="#softmax回归" class="headerlink" title="softmax回归"></a>softmax回归</h1><p>此项内容等之后再学习。</p>
+
     </div>
     
     
