@@ -333,7 +333,36 @@ for epoch in range(num_epochs):
 <h2 id="网络构架"><a href="#网络构架" class="headerlink" title="网络构架"></a>网络构架</h2><p>为了评估所有可能类别的条件概率，我们需要一个有多个输出的模型，每个模型对应一个类别。为了解决线性模型的分类问题，我们徐奥和输出一样多的放射函数。每个输出对应于它自己的放射函数。在上述例子中，由于我们有4个特征（即输入）和三个可能的类别，五哦一我们需要12个标量来表示权重，3个标量来表示偏置。<br><img src="/images/17.png"><br>如图所示即为这个计算过程，由于每个输出取决于每个输入，所以softmax回归也是全连接层。<br>为了更简洁的表达。我们可以通过向量形式表达o &#x3D; Wx + b，权重我们放到了一个3×4的矩阵当中。</p>
 <h2 id="全连接层的参数开销"><a href="#全连接层的参数开销" class="headerlink" title="全连接层的参数开销"></a>全连接层的参数开销</h2><p>在深度学习中处处皆有全连接层，然而这其中会用很多参数，具体的说，对于任何有d个输入和q个输出的全连接层，参数开销为O(dq)，这个数字在实践中可能会非常高，但幸运的是，我们可以将其成本减少到$O(\frac{dq}{n})$，其中n是超参数，以平衡参数节约和模型有效性。</p>
 <h2 id="softmax-运算"><a href="#softmax-运算" class="headerlink" title="softmax 运算"></a>softmax 运算</h2><p>对于未规范化的预测o我们能否视为我们感兴趣的输出呢？答案是否定的。因为线性层的输出直接视为概率会存在以下问题：1.没限制输出数字的总和为1。2.输入不同会导致输出为负值这并不符合概率论。所以要视输出为概率，我们需要解决上述两个问题。<br>此外，我们还需要一个训练的目标函数，来激励模型精准地估计概率。例如，在分类器输出为0.5的样本中，我们希望这些样本刚好有一半实际上属于预测的类别。这个属性叫做<em>校准</em>。<br>$\hat{y} &#x3D; softmax(o)  \hat{y_j}&#x3D;\farc{exp(o_j)}{\sum{k}exp(o_k)} $<br>上述式子即是softmax函数。对于所有j总有其y_j在0到1，因此，$\hat{y}$可以视为一个正确的概率分布。同时我们可以用 argmax$\hat{y_j}$ &#x3D; argmax$o_j$<br>尽管softmax是非线性的，但是softman回归的输出仍是由其输入的特征的仿射变换所决定的。因此，softmax回归是一个线性模型。</p>
-<h2 id="小批量样本的矢量化"><a href="#小批量样本的矢量化" class="headerlink" title="小批量样本的矢量化"></a>小批量样本的矢量化</h2>
+<h2 id="小批量样本的矢量化"><a href="#小批量样本的矢量化" class="headerlink" title="小批量样本的矢量化"></a>小批量样本的矢量化</h2><p>为了提高计算效率，我们会对小批量样本的数据执行矢量计算。假设读取了样本X，其中特征维度为d，批量为n，输出有q个类别。那么小批量特征$X \in R^{n×q}$,权重$W \in R^{d×q}$,偏置$b \in R^{1×q}$<br>Softmax: O &#x3D; XW + b<br>对于o中的每一行，我们可以先对所有项先进行幂运算然后,然后通过求和对其进行标准化，结果为n × q的矩阵(广播机制)</p>
+<h2 id="损失函数-1"><a href="#损失函数-1" class="headerlink" title="损失函数"></a>损失函数</h2><p>这里我们用到的是交叉熵损失，即对于标签y和预测模型$\hat{y}$<br>$l(y,\hat{y}) &#x3D; -\sum{j&#x3D;1}{q}y_jlog\hat{y_j}$<br>这里因为y是长为q的独热编码，所以除了真实的一项为1，其余均为0，又因为$\hat{y_j}$是预测的概率，所以其对数不大于0所以加符号。这里之所以应用交叉熵是因为交叉熵后模型的差值会很大，能更明显的体现出不同模型之间的差异，这是我们对分类问题所期望看到的。</p>
+<h2 id="模型的预测和评估"><a href="#模型的预测和评估" class="headerlink" title="模型的预测和评估"></a>模型的预测和评估</h2><p>在训练softmax回归模型后，给出任何样本特征，我们可以预测每个输出类别的概率。通常我们使用预测概率最高的类别作为输出类别。如果预测和实际一样则成功。我们用<em>精度</em>来评判一个模型的性能，其等于正确预测数和预测总是之间的比率。</p>
+<h1 id="图像分类数据集"><a href="#图像分类数据集" class="headerlink" title="图像分类数据集"></a>图像分类数据集</h1><pre><code class="bash">import torch
+import torchvision
+from torch.utils import data
+from torchvision import transforms
+from d2l import torch as d2l
+import matplotlib.pyplot as plt
+
+
+def get_dataloader_workers():   # 便于操作后续更改直接在这里更改。
+    return 4
+
+
+def load_data_fashion_minst(batch_size, resize=None):
+    trans = [transforms.ToTensor()]     # 创建一个包含将图片转换为向量模式的列表
+    if resize:  
+        trans.insert(0, transforms.Resize(resize))
+    trans = transforms.Compose(trans)   # 串联多个图片变换的操作
+    mnist_train = torchvision.datasets.FashionMNIST(root=&quot;../data&quot;, train=True, transform=trans, download=True)
+    mnist_test = torchvision.datasets.FashionMNIST(root=&quot;../data&quot;, train=False, transform=trans, download=True)
+    return (data.DataLoader(mnist_train, batch_size, shuffle=True, num_workers=get_dataloader_workers()),
+            data.DataLoader(mnist_test, batch_size, shuffle=False, num_workers=get_dataloader_workers()))
+
+
+train_iter, test_iter = load_data_fashion_minst(32, resize=64)
+</code></pre>
+<p>上述代码即是对图像进行下载和读取操作，并且通过dataloader中的shuffle实现对训练集的小批量读取。</p>
+<h2 id="开始从零实现softmax"><a href="#开始从零实现softmax" class="headerlink" title="开始从零实现softmax"></a>开始从零实现softmax</h2>
     </div>
     
     
