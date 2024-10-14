@@ -482,7 +482,20 @@ train_ch3(net, train_iter, test_iter, cross_entropy, num_epochs, updater)
 plt.show()
 </code></pre>
 <p><img src="/images/18.png"></p>
-<h2 id="简单实现softmax"><a href="#简单实现softmax" class="headerlink" title="简单实现softmax"></a>简单实现softmax</h2>
+<h2 id="简单实现softmax"><a href="#简单实现softmax" class="headerlink" title="简单实现softmax"></a>简单实现softmax</h2><pre><code class="bash">net = nn.Sequential(nn.Flatten(), nn.Linear(num_inputs, num_outputs))
+
+
+def init_weights(m):
+    if type(m) == nn.Linear:
+        nn.init.normal_(m.weight, std=0.01)
+
+
+net.apply(init_weights)
+loss = nn.CrossEntropyLoss(reduction=&#39;none&#39;)
+trainer = torch.optim.SGD(net.parameters(), lr=0.1)
+</code></pre>
+<p>其中的简易实现就是把相应的操作进行替换，然后最后使用3.6中的训练函数继续训练即可。</p>
+
     </div>
     
     
