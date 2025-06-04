@@ -176,8 +176,11 @@
     
     <div class="content" v-pre>
         <h1 id="什么是星闪"><a href="#什么是星闪" class="headerlink" title="什么是星闪"></a>什么是星闪</h1><p>星闪是无限通信技术，其他都是吹牛逼的。<br>SLB：基础接入  对标WIFI，追求大宽带、大容量、高精度。<br>SLE：低功耗接入 对标蓝牙 追求低功耗、低时延、高可靠性。</p>
-<h1 id="如何配置环境"><a href="#如何配置环境" class="headerlink" title="如何配置环境"></a>如何配置环境</h1><h2 id="Windows下操作"><a href="#Windows下操作" class="headerlink" title="Windows下操作"></a>Windows下操作</h2><p>上官网下载 HiSpark Studio（照VSCODE改的），并且在客服给的ws63的资料里下载fbb_ws63(下载HS对应的根目录下)，然后python版本为3.11.4如果持有conda的话，请在base下下载，因为它默认为你系统默认的python，如果在本地下载的话对应的还是conda版本，所以在base下下载后，在ws资料里安装对应的库文件。<br>进入HS软件后，在导航栏找到系统配置，如果系统配置无法打开则是python问题，需要按照上述步骤检查，并且终端会给你报错。选择你要加载的样例，将最下方的total别忘记移除，否则命名重复，然后save后点击重编译，期间可以点击工程配置，选择端口和更高的比特率，最后点击程序加载即可烧录。</p>
+<h1 id="如何配置环境"><a href="#如何配置环境" class="headerlink" title="如何配置环境"></a>如何配置环境</h1><h2 id="Windows下操作"><a href="#Windows下操作" class="headerlink" title="Windows下操作"></a>Windows下操作</h2><p>上官网下载 HiSpark Studio（照VSCODE改的），并且在客服给的ws63的资料里下载fbb_ws63(下载HS对应的根目录下)，然后python版本为3.11.4如果持有conda的话，请在base下下载，因为它默认为你系统默认的python，如果在本地下载的话对应的还是conda版本，所以在base下下载后，在ws资料里安装对应的库文件。 如果不用conda的话，直接采用在本地下载后安装对应的库文件即可。<br>进入HS软件后，在导航栏找到系统配置，如果系统配置无法打开则是python问题，需要按照上述步骤检查，并且终端会给你报错。选择你要加载的样例，将最下方的total别忘记移除，否则命名重复，然后save后点击重编译，期间可以点击工程配置，选择端口和更高的比特率，最后点击程序加载即可烧录。</p>
 <h2 id="Linux下操作"><a href="#Linux下操作" class="headerlink" title="Linux下操作"></a>Linux下操作</h2><p>在Ubuntu下进行操作，确保你有这个第二个系统，然后没研究明白等我操作操作。</p>
+<h1 id="WS63-驱动开发"><a href="#WS63-驱动开发" class="headerlink" title="WS63 驱动开发"></a>WS63 驱动开发</h1><p>在发现了对应的引脚后可以采用函数接口:GPIO，在手册的驱动里有写，需要将对应的pin复用为GPIO功能，然后按照手册设置成你想要的模式。</p>
+<h1 id="串口通信"><a href="#串口通信" class="headerlink" title="串口通信"></a>串口通信</h1><h2 id="并行通信"><a href="#并行通信" class="headerlink" title="并行通信"></a>并行通信</h2><p>同时传递多个二进制位。传输速度快，但是传递要求高，通信距离短，要求芯片单元距离进点。</p>
+<h2 id="串行通信"><a href="#串行通信" class="headerlink" title="串行通信"></a>串行通信</h2><p>在一根数据线上一串传过去。加上电器处理，能让传输距离变远。</p>
 
     </div>
     
