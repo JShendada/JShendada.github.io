@@ -200,7 +200,7 @@
 <h3 id="多主多从"><a href="#多主多从" class="headerlink" title="多主多从"></a>多主多从</h3><p>一个总线上可以连接多个主从，但是需要进行冲突检测和仲裁。因为其<strong>半双工传输</strong>的特性，我们需要确保一根总线上只能由一个主和一个从正在工作。</p>
 <h3 id="从机地址唯一性"><a href="#从机地址唯一性" class="headerlink" title="从机地址唯一性"></a>从机地址唯一性</h3><p>每个设备都有唯一的7位或10位从机地址，主设备通过从机地址指定要通信的从设备。</p>
 <h3 id="速度灵活"><a href="#速度灵活" class="headerlink" title="速度灵活"></a>速度灵活</h3><p>支持多速度模式。</p>
-<h1 id="智能小车组装部分"><a href="#智能小车组装部分" class="headerlink" title="智能小车组装部分"></a>智能小车组装部分</h1><h2 id="这一次采用的是TB6621的驱动板"><a href="#这一次采用的是TB6621的驱动板" class="headerlink" title="这一次采用的是TB6621的驱动板"></a>这一次采用的是TB6621的驱动板</h2><h3 id="PWM"><a href="#PWM" class="headerlink" title="PWM"></a>PWM</h3><p>中文名称：脉冲调制。通过调整占空比来调整信号、能量等。<br>实现方法:<br><img src="/images/WS1.jpg"></p>
+<h1 id="智能小车组装部分"><a href="#智能小车组装部分" class="headerlink" title="智能小车组装部分"></a>智能小车组装部分</h1><h2 id="这一次采用的是TB6621的驱动板"><a href="#这一次采用的是TB6621的驱动板" class="headerlink" title="这一次采用的是TB6621的驱动板"></a>这一次采用的是TB6621的驱动板</h2><h3 id="PWM"><a href="#PWM" class="headerlink" title="PWM"></a>PWM</h3><p>中文名称：脉冲调制。通过调整占空比来调整信号、能量等。<br>实现方法:<br><img src="/images/WS1.jpg"><br>我们假定定时器在工作在向上计数PWM模式，当CNT&lt;CCRx时，输出0，当CNT&gt;CCRx，输出1。当CNT&#x3D;ARR时，就重置为0，重新向上计数。</p>
 
     </div>
     
